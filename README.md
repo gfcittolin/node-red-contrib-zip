@@ -1,6 +1,6 @@
 # node-red-contrib-zip
 ----------------------
-Node-RED node to create and read ZIP files. Based on [node-zip](https://github.com/daraosn/node-zip)
+Node-RED node to create and read ZIP files. Based on [jszip](https://github.com/Stuk/jszip)
 
 A function that parses the `msg.payload` to convert a Buffer to/from a ZIP object. 
 Places the result back into the payload.

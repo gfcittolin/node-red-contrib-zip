@@ -1,0 +1,20 @@
+{
+    "zip": {
+        "label": {
+            "name": "Name",
+            "mode": "Mode",
+            "filename": "File name",
+            "outasstring": "Output payload as String"
+        },
+        "mode": {
+            "compress": "Compress",
+            "decompress": "Decompress"
+        },
+        "error": {
+            "payload-type-buffer": "Payload type must be a Buffer",
+            "payload-type-buffer-string": "Payload type must be a Buffer or a String",
+            "filename-type-string": "Filename type must be a String",
+            "parse": "Error parsing zip file: __err__"
+        }
+    }
+}

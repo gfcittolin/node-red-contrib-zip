@@ -1,0 +1,104 @@
+<!--
+  Copyright 2017 Guilherme Francescon
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<script type="text/x-red" data-template-name="zip">
+	<div class="form-row">
+		<label for="node-input-mode"><i class="fa fa-sliders"></i> <span data-i18n="zip.label.mode"></span></label>
+		<select type="text" id="node-input-mode">
+			<option value="compress" data-i18n="zip.mode.compress"></option>
+			<option value="decompress" data-i18n="zip.mode.decompress"></option>
+		</select>
+	</div>
+    <div class="form-row" id="node-form-row-zip-filename" style="display: none">
+        <label for="node-input-filename"><i class="fa fa-file"></i> <span data-i18n="zip.label.filename"></span></label>
+        <input type="text" id="node-input-filename" data-i18n="[placeholder]zip.label.filename">
+    </div>
+	<div class="form-row" id="node-form-row-zip-outasstring" style="display: none">
+		<label>&nbsp;</label>
+		<input type="checkbox" id="node-input-outasstring" style="display: inline-block; width: auto; vertical-align: top;">
+		<label for="node-input-outasstring" style="width:70%;"><span data-i18n="zip.label.outasstring"></span></label>
+	</div>
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> <span data-i18n="zip.label.name"></span></label>
+        <input type="text" id="node-input-name" data-i18n="[placeholder]zip.label.name">
+    </div>
+</script>
+
+<script type="text/x-red" data-help-name="zip">
+    <p>
+        A function that parses the <code>msg.payload</code> to convert a Buffer to/from a ZIP object. 
+        Places the result back into the payload.
+    </p>
+    <p>
+        If <b>Mode</b> is <i>Compress</i>, the output is always a Buffer with a ZIP content, and the input 
+        payload can be one of the following:
+    </p>
+    <ul>
+        <li><b>Buffer/String:</b> The payload is compressed as a single file in the resulting ZIP. The <b>Filename</b> 
+        specifies the name of this file, or can be specified with <code>msg.filename</code> if the configuration is left empty</li>
+        <li><b>Array:</b> An array of objects containing <code>filename</code> as a String and <code>payload</code> as 
+        a Buffer/String, each representing one file in the resultiing zip</li>
+    </ul>
+    <p>
+        If <b>Mode</b> is <i>Decompress</i>, the input payload is expected to be a Buffer, and the output is an Array with
+        objects containing <code>filename</code> as a String and <code>payload</code> as a Buffer
+    </p>
+
+
+</script>
+
+<script type="text/javascript">
+    RED.nodes.registerType('zip',{
+        category: 'function',
+        color:"#DEBD5C",
+        defaults: {
+            name: {value: ""},
+            mode: {value: "compress"},
+            filename: {value: ""},
+            outasstring: {value: false}
+        },
+        inputs:1,
+        outputs:1,
+        icon: "zip.png",
+        label: function() {
+            return this.name||"zip";
+        },
+        labelStyle: function() {
+            return this.name?"node_label_italic":"";
+        },
+        oneditprepare: function() {
+            var filenameRow = $('#node-form-row-zip-filename');
+            var outasstringRow = $('#node-form-row-zip-outasstring');
+            var modeInput = $('#node-input-mode');
+
+            function updateUi() {
+                switch(modeInput.val()) {
+                    case "compress":
+                        outasstringRow.hide();
+                        filenameRow.show();
+                        break;
+                    case "decompress":
+                        outasstringRow.show();
+                        filenameRow.hide();
+                        break;
+                }
+            }
+
+            modeInput.change(updateUi);
+            updateUi();
+        }
+    });
+</script>

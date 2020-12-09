@@ -19,13 +19,13 @@
     "node-red",
     "unzip"
   ],
-  "author": "Guilherme Francescon <guilherme.francescon@netsmarttech.com>",
+  "author": "Guilherme Francescon <gfcittolin@gmail.com>",
   "license": "Apache-2.0",
   "bugs": {
     "url": "https://github.com/gfcittolin/node-red-contrib-zip/issues"
   },
   "homepage": "https://github.com/gfcittolin/node-red-contrib-zip#readme",
   "dependencies": {
-    "jszip": "^3.1.3"
+    "jszip": "^3.5.0"
   }
 }

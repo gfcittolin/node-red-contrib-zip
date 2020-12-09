@@ -1,5 +1,5 @@
 # node-red-contrib-zip
-----------------------
+
 Node-RED node to create and read ZIP files. Based on [jszip](https://github.com/Stuk/jszip)
 
 A function that parses the `msg.payload` to convert a Buffer to/from a ZIP object. 
@@ -16,3 +16,8 @@ a Buffer/String, each representing one file in the resultiing zip
 
 If **Mode** is *Decompress*, the input payload is expected to be a Buffer, and the output is an Array with
 objects containing `filename` as a String and `payload` as a Buffer
+
+
+## License
+
+Copyright 2017-2020 Guilherme Francescon Cittolin, [Apache 2.0 license](LICENSE).

@@ -26,6 +26,21 @@
         <label for="node-input-filename"><i class="fa fa-file"></i> <span data-i18n="zip.label.filename"></span></label>
         <input type="text" id="node-input-filename" data-i18n="[placeholder]zip.label.filename">
     </div>
+    <div class="form-row" id="node-form-row-zip-compressionLevel" style="display: none">
+        <label for="node-input-compressionlevel"><i class="fa fa-compress"></i> <span data-i18n="zip.label.compressionlevel"></span></label>
+        <select type="text" id="node-input-compressionlevel">
+            <option value="0" data-i18n="zip.label.level.no"></option>
+            <option value="1" data-i18n="zip.label.level.fast"></option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6" data-i18n="zip.label.level.default"></option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9" data-i18n="zip.label.level.best"></option>
+        </select>
+    </div>
 	<div class="form-row" id="node-form-row-zip-outasstring" style="display: none">
 		<label>&nbsp;</label>
 		<input type="checkbox" id="node-input-outasstring" style="display: inline-block; width: auto; vertical-align: top;">
@@ -68,6 +83,7 @@
             name: {value: ""},
             mode: {value: "compress"},
             filename: {value: ""},
+            compressionlevel: {value: 6},
             outasstring: {value: false}
         },
         inputs:1,
@@ -81,18 +97,26 @@
         },
         oneditprepare: function() {
             var filenameRow = $('#node-form-row-zip-filename');
+            var compressionRow = $('#node-form-row-zip-compressionLevel');
             var outasstringRow = $('#node-form-row-zip-outasstring');
             var modeInput = $('#node-input-mode');
+
+            if (this.compressionlevel === undefined) {
+                this.compressionlevel = 6;
+                $('#node-input-compressionlevel').val(6);
+            }
 
             function updateUi() {
                 switch(modeInput.val()) {
                     case "compress":
                         outasstringRow.hide();
                         filenameRow.show();
+                        compressionRow.show();
                         break;
                     case "decompress":
                         outasstringRow.show();
                         filenameRow.hide();
+                        compressionRow.hide();
                         break;
                 }
             }

@@ -4,7 +4,14 @@
             "name": "Name",
             "mode": "Mode",
             "filename": "File name",
-            "outasstring": "Output payload as String"
+            "compressionlevel": "Compression",
+            "outasstring": "Output payload as String",
+            "level": {
+                "no": "0 (no compression)",
+                "fast": "1 (fast)",
+                "default": "6 (default)",
+                "best": "9 (best)"
+            }
         },
         "mode": {
             "compress": "Compress",

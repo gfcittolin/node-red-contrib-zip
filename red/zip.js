@@ -32,18 +32,14 @@ module.exports = function (RED) {
         RED.nodes.createNode(this, config);
         const node = this;
 
-        function addEntry(zip, name, data) {
-            if (typeof data == 'string') {
-                data = Buffer.from(data);
-            }
-            zip.file(name, data);
-        }
-
         function onInput(msg, send, done) {
             let zip, f;
 
             if (config.mode === "compress") {
                 zip = new JSZip();
+
+                let level = parseInt(config.compressionlevel);
+                if (isNaN(level)) level = 6; //default
 
                 if (Array.isArray(msg.payload)) {
                     for (var i in msg.payload) {
@@ -72,7 +68,8 @@ module.exports = function (RED) {
 
                 zip.generateAsync({
                     type: 'nodebuffer',
-                    compression: 'DEFLATE'
+                    compression: level ? 'DEFLATE' : 'STORE',
+                    compressionOptions: { level }
                 }).then(function (data) {
                     //sends message
 

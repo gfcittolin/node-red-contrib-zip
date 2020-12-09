@@ -53,23 +53,71 @@
 </script>
 
 <script type="text/x-red" data-help-name="zip">
+    <p>Reads and creates ZIP files</p>
+
+    <h3>Inputs</h3>
+    <p><i>Compress</i> mode</p>
+	<dl class="message-properties">
+		<dt>payload<span class="property-type">string | Buffer</span></dt>
+		<dd>
+            The content to be compressed
+		</dd>
+
+		<dt>filename<span class="property-type">string</span></dt>
+		<dd>
+            Used to specify the file name that represents the content specified on <code>payload</code>.
+            Used only if the field in the configuration of the node is left empty
+		</dd>
+    </dl>
+
+    <p><i>Decompress</i> mode</p>
+	<dl class="message-properties">
+		<dt>payload<span class="property-type">Buffer</span></dt>
+		<dd>
+            A Buffer containing the ZIP file content to be decompressed
+		</dd>
+    </dl>
+
+    <h3>Outputs</h3>
+    <p><i>Compress</i> mode</p>
+	<dl class="message-properties">
+		<dt>payload<span class="property-type">Buffer</span></dt>
+		<dd>
+            A Buffer with the ZIP file content
+		</dd>
+    </dl>
+
+    <p><i>Decompress</i> mode</p>
+	<dl class="message-properties">
+        <span>
+            Array of objects, each representing a file in the ZIP file, 
+            with the following properties:
+        </span>
+		<dt>payload<span class="property-type">Buffer | string</span></dt>
+		<dd>
+            The content of the file. If <i>Output payload as String</i>
+            is set, the Buffer is converted to string
+        </dd>
+        
+		<dt>filename<span class="property-type">string</span></dt>
+		<dd>
+            The name of the file
+		</dd>
+    </dl>
+    
+
+    <h3>Details</h3>
     <p>
-        A function that parses the <code>msg.payload</code> to convert a Buffer to/from a ZIP object. 
-        Places the result back into the payload.
+        Node to zip one or more files given their contents (<i>Compress</i> mode), or unzips a file, returning all files 
+        inside it (<i>Decompress</i> mode).
     </p>
     <p>
-        If <b>Mode</b> is <i>Compress</i>, the output is always a Buffer with a ZIP content, and the input 
-        payload can be one of the following:
+        When in <i>Compress</i> mode, the compression level can be set in the node's configuration, with 0 meaning no
+        compression at all, 1 meaning fastest method (but poor compression), and 9 meaning best compression (but poor performance)
     </p>
-    <ul>
-        <li><b>Buffer/String:</b> The payload is compressed as a single file in the resulting ZIP. The <b>Filename</b> 
-        specifies the name of this file, or can be specified with <code>msg.filename</code> if the configuration is left empty</li>
-        <li><b>Array:</b> An array of objects containing <code>filename</code> as a String and <code>payload</code> as 
-        a Buffer/String, each representing one file in the resultiing zip</li>
-    </ul>
     <p>
-        If <b>Mode</b> is <i>Decompress</i>, the input payload is expected to be a Buffer, and the output is an Array with
-        objects containing <code>filename</code> as a String and <code>payload</code> as a Buffer
+        Also in <i>Compress</i> mode, the node accepts an array of objects in <code>payload</code>, each with a <code>payload</code> and a 
+        <code>filename</code> property, that represents each a file that will be in the resulting zip file
     </p>
 
 

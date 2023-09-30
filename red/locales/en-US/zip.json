@@ -6,6 +6,8 @@
             "filename": "File name",
             "compressionlevel": "Compression",
             "outasstring": "Output payload as String",
+            "inputprop": "Input Property",
+            "outputprop": "Output Property",
             "level": {
                 "no": "0 (no compression)",
                 "fast": "1 (fast)",

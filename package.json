@@ -27,7 +27,7 @@
   },
   "homepage": "https://github.com/gfcittolin/node-red-contrib-zip#readme",
   "dependencies": {
-    "jszip": "^3.5.0"
+    "jszip": "^3.10.1"
   },
   "bundledDependencies": [
     "jszip"

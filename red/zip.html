@@ -14,20 +14,28 @@
   limitations under the License.
 -->
 
-<script type="text/x-red" data-template-name="zip">
+<script type="text/html" data-template-name="zip">
+    <div class="form-row">
+        <label for="node-input-name" style="width:120px;"><i class="fa fa-tag"></i> <span data-i18n="zip.label.name"></span></label>
+        <input type="text" id="node-input-name" data-i18n="[placeholder]zip.label.name">
+    </div>
+    <div class="form-row">
+        <label for="node-input-property" style="width:120px;"><i class="fa fa-ellipsis-h"></i> <span data-i18n="zip.label.inputprop"></span></label>
+        <input type="text" id="node-input-property" style="width:70%;"/>
+    </div>
 	<div class="form-row">
-		<label for="node-input-mode"><i class="fa fa-sliders"></i> <span data-i18n="zip.label.mode"></span></label>
+		<label for="node-input-mode" style="width:120px;"><i class="fa fa-sliders"></i> <span data-i18n="zip.label.mode"></span></label>
 		<select type="text" id="node-input-mode">
 			<option value="compress" data-i18n="zip.mode.compress"></option>
 			<option value="decompress" data-i18n="zip.mode.decompress"></option>
 		</select>
 	</div>
-    <div class="form-row" id="node-form-row-zip-filename" style="display: none">
-        <label for="node-input-filename"><i class="fa fa-file"></i> <span data-i18n="zip.label.filename"></span></label>
+    <div class="form-row" id="node-form-row-zip-filename" style="display:none">
+        <label for="node-input-filename" style="width:120px;"><i class="fa fa-file"></i> <span data-i18n="zip.label.filename"></span></label>
         <input type="text" id="node-input-filename" data-i18n="[placeholder]zip.label.filename">
     </div>
-    <div class="form-row" id="node-form-row-zip-compressionLevel" style="display: none">
-        <label for="node-input-compressionlevel"><i class="fa fa-compress"></i> <span data-i18n="zip.label.compressionlevel"></span></label>
+    <div class="form-row" id="node-form-row-zip-compressionLevel" style="display:none">
+        <label for="node-input-compressionlevel" style="width:120px;"><i class="fa fa-compress"></i> <span data-i18n="zip.label.compressionlevel"></span></label>
         <select type="text" id="node-input-compressionlevel">
             <option value="0" data-i18n="zip.label.level.no"></option>
             <option value="1" data-i18n="zip.label.level.fast"></option>
@@ -42,17 +50,17 @@
         </select>
     </div>
 	<div class="form-row" id="node-form-row-zip-outasstring" style="display: none">
-		<label>&nbsp;</label>
+		<label style="width:120px;">&nbsp;</label>
 		<input type="checkbox" id="node-input-outasstring" style="display: inline-block; width: auto; vertical-align: top;">
-		<label for="node-input-outasstring" style="width:70%;"><span data-i18n="zip.label.outasstring"></span></label>
+		<span style="width:70%;" data-i18n="zip.label.outasstring"></span>
 	</div>
     <div class="form-row">
-        <label for="node-input-name"><i class="fa fa-tag"></i> <span data-i18n="zip.label.name"></span></label>
-        <input type="text" id="node-input-name" data-i18n="[placeholder]zip.label.name">
+        <label for="node-input-outproperty" style="width:120px;"><i class="fa fa-ellipsis-h"></i> <span data-i18n="zip.label.outputprop"></span></label>
+        <input type="text" id="node-input-outproperty" style="width:70%;"/>
     </div>
 </script>
 
-<script type="text/x-red" data-help-name="zip">
+<script type="text/html" data-help-name="zip">
     <p>Reads and creates ZIP files</p>
 
     <h3>Inputs</h3>
@@ -90,7 +98,7 @@
     <p><i>Decompress</i> mode</p>
 	<dl class="message-properties">
         <span>
-            Array of objects, each representing a file in the ZIP file, 
+            Array of objects, each representing a file in the ZIP file,
             with the following properties:
         </span>
 		<dt>payload<span class="property-type">Buffer | string</span></dt>
@@ -98,17 +106,17 @@
             The content of the file. If <i>Output payload as String</i>
             is set, the Buffer is converted to string
         </dd>
-        
+
 		<dt>filename<span class="property-type">string</span></dt>
 		<dd>
             The name of the file
 		</dd>
     </dl>
-    
+
 
     <h3>Details</h3>
     <p>
-        Node to zip one or more files given their contents (<i>Compress</i> mode), or unzips a file, returning all files 
+        Node to zip one or more files given their contents (<i>Compress</i> mode), or unzips a file, returning all files
         inside it (<i>Decompress</i> mode).
     </p>
     <p>
@@ -116,7 +124,7 @@
         compression at all, 1 meaning fastest method (but poor compression), and 9 meaning best compression (but poor performance)
     </p>
     <p>
-        Also in <i>Compress</i> mode, the node accepts an array of objects in <code>payload</code>, each with a <code>payload</code> and a 
+        Also in <i>Compress</i> mode, the node accepts an array of objects in <code>payload</code>, each with a <code>payload</code> and a
         <code>filename</code> property, that represents each a file that will be in the resulting zip file
     </p>
 
@@ -132,7 +140,9 @@
             mode: {value: "compress"},
             filename: {value: ""},
             compressionlevel: {value: 6},
-            outasstring: {value: false}
+            outasstring: {value: false},
+            property: {value: "payload"},
+            outproperty: {value: "payload"}
         },
         inputs:1,
         outputs:1,
@@ -148,6 +158,14 @@
             var compressionRow = $('#node-form-row-zip-compressionLevel');
             var outasstringRow = $('#node-form-row-zip-outasstring');
             var modeInput = $('#node-input-mode');
+            if (this.property === undefined) {
+                $("#node-input-property").val("payload");
+            }
+            if (this.outproperty === undefined) {
+                $("#node-input-outproperty").val($("#node-input-property").val());
+            }
+            $("#node-input-property").typedInput({default:'msg',types:['msg']});
+            $("#node-input-outproperty").typedInput({default:'msg',types:['msg']});
 
             if (this.compressionlevel === undefined) {
                 this.compressionlevel = 6;

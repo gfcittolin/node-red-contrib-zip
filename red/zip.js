@@ -30,10 +30,13 @@ module.exports = function (RED) {
 
     function ZipNode(config) {
         RED.nodes.createNode(this, config);
+        this.property = config.property||"payload";
+        this.outproperty = config.outproperty||config.property||"payload";
         const node = this;
 
         function onInput(msg, send, done) {
             let zip, f;
+            var value = RED.util.getMessageProperty(msg,node.property);
 
             if (config.mode === "compress") {
                 zip = new JSZip();
@@ -41,9 +44,9 @@ module.exports = function (RED) {
                 let level = parseInt(config.compressionlevel);
                 if (isNaN(level)) level = 6; //default
 
-                if (Array.isArray(msg.payload)) {
-                    for (var i in msg.payload) {
-                        f = msg.payload[i];
+                if (Array.isArray(value)) {
+                    for (var i in value) {
+                        f = value[i];
 
                         if (typeof f.filename !== 'string') {
                             done(RED._('zip.error.filename-type-string'));
@@ -57,13 +60,14 @@ module.exports = function (RED) {
 
                         zip.file(f.filename, f.payload);
                     }
-                } else {
-                    if (!(msg.payload instanceof Buffer || typeof msg.payload == 'string')) {
+                }
+                else {
+                    if (!(value instanceof Buffer || typeof value == 'string')) {
                         done(RED._('zip.error.payload-type-buffer-string'));
                         return;
                     }
 
-                    zip.file(config.filename || msg.filename || 'file', msg.payload);
+                    zip.file(config.filename || msg.filename || 'file', value);
                 }
 
                 zip.generateAsync({
@@ -72,28 +76,23 @@ module.exports = function (RED) {
                     compressionOptions: { level }
                 }).then(function (data) {
                     //sends message
-
-                    msg.payload = data;
+                    RED.util.setMessageProperty(msg,node.outproperty,data);
                     send(msg);
                     done();
-
                 }).catch(function (err) {
                     //catches errors
-
                     done(RED._('zip.error.parse', { err: err }));
                 })
 
-
             } else if (config.mode === "decompress") {
 
-                if (!(msg.payload instanceof Buffer)) {
+                if (!(value instanceof Buffer)) {
                     done(RED._("zip.error.payload-type-buffer"));
                     return;
                 }
 
                 zip = new JSZip();
-
-                zip.loadAsync(msg.payload).then(function () {
+                zip.loadAsync(value).then(function () {
                     //read files
 
                     const promises = [];
@@ -109,13 +108,11 @@ module.exports = function (RED) {
                     return Promise.all(promises);
                 }).then(function (files) {
                     //send the result
-
-                    msg.payload = files;
+                    RED.util.setMessageProperty(msg,node.outproperty,files);
                     send(msg);
                     done();
                 }).catch(function (err) {
                     //catches errors
-
                     done(RED._('zip.error.parse', { err: err }));
                 });
             }
